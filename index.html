@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tailor Master Pro</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* --- PREMIUM COLOR PALETTE --- */
+            --primary: #4f46e5;
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+            --secondary-gradient: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%);
+            
+            --bg-body: #f1f5f9;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-glass: rgba(255, 255, 255, 0.75);
+            
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
+            --text-light: #94a3b8;
+            
+            /* Semantic Colors */
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+
+            /* UI Variables */
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --shadow-header: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --nav-height: 80px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            padding-bottom: calc(var(--nav-height) + 20px);
+            min-height: 100vh;
+        }
+
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        
+        .text-sm { font-size: 0.85rem; }
+        .text-xs { font-size: 0.75rem; }
+        .font-bold { font-weight: 600; }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+        .text-primary { color: var(--primary); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .view { animation: fadeIn 0.3s ease-out; }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .header-content h1 { font-size: 1.25rem; font-weight: 700; color: var(--text-dark); }
+        .header-content p { font-size: 0.8rem; color: var(--text-gray); }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(255,255,255,1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- DASHBOARD STATS --- */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .stat-box {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+        }
+        .stat-icon {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 1.1rem;
+        }
+        .stat-val { font-size: 1.2rem; font-weight: 700; display: block; margin-bottom: 2px; }
+        .stat-lbl { font-size: 0.7rem; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- FORMS --- */
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; color: var(--text-dark); }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            background: white;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            appearance: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary-gradient); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .btn-secondary { background: white; color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .btn-sm { padding: 8px 16px; font-size: 0.85rem; width: auto; }
+        
+        /* --- BADGES --- */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .bg-success-light { background: #d1fae5; color: #065f46; }
+        .bg-danger-light { background: #fee2e2; color: #991b1b; }
+        .bg-warning-light { background: #ffedd5; color: #9a3412; }
+        .bg-info-light { background: #e0f2fe; color: #075985; }
+        .bg-gray-light { background: #f1f5f9; color: #475569; }
+
+        /* --- ORDER CARD SPECIFIC --- */
+        .order-card { border-left: 4px solid transparent; }
+        .order-card.urgent { border-left-color: var(--warning); }
+        .order-card.super-urgent { border-left-color: var(--danger); }
+        
+        /* --- BOTTOM NAV --- */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            z-index: 100;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+        }
+        .nav-item { text-align: center; color: var(--text-light); transition: 0.3s; position: relative; }
+        .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .nav-item span { font-size: 0.7rem; font-weight: 500; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active i { transform: translateY(-2px); }
+
+        /* --- FAB --- */
+        .fab {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 56px; height: 56px;
+            background: var(--primary-gradient);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+            font-size: 1.5rem; z-index: 90;
+            transition: transform 0.2s;
+        }
+        .fab:active { transform: scale(0.9) rotate(90deg); }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            z-index: 200; display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white; width: 100%; max-width: 400px;
+            border-radius: 24px; padding: 24px;
+            box-shadow: var(--shadow-soft);
+            animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- EMPTY STATE --- */
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+        .empty-state i { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+
+        /* --- MEASUREMENT GRID --- */
+        .measure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .measure-box { position: relative; }
+        .measure-box span { position: absolute; right: 12px; top: 14px; color: var(--text-light); font-size: 0.75rem; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <section id="view-dashboard" class="view">
+        <header>
+            <div class="flex-between header-content">
+                <div>
+                    <h1>Business Overview</h1>
+                    <p id="date-display">Loading...</p>
+                </div>
+                <div class="badge bg-info-light">
+                    <i class="fas fa-store"></i> Pro
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-icon bg-info-light text-primary"><i class="fas fa-wallet"></i></div>
+                    <span class="stat-val text-primary" id="dash-income">$0</span>
+                    <span class="stat-lbl">Today Income</span>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon bg-danger-light text-danger"><i class="fas fa-exclamation-circle"></i></div>
+                    <span class="stat-val text-danger" id="dash-due">$0</span>
+                    <span class="stat-lbl">Total Due</span>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon bg-success-light text-success"><i class="fas fa-cut"></i></div>
+                    <span class="stat-val text-success" id="dash-orders">0</span>
+                    <span class="stat-lbl">This Month</span>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon bg-warning-light text-warning"><i class="fas fa-clock"></i></div>
+                    <span class="stat-val text-warning" id="dash-pending">0</span>
+                    <span class="stat-lbl">Pending</span>
+                </div>
+            </div>
+
+            <div class="flex-between" style="margin-bottom: 15px;">
+                <h3 class="font-bold text-dark">Urgent Orders</h3>
+                <span class="text-xs text-warning"><i class="fas fa-fire"></i> Priority</span>
+            </div>
+            <div id="urgent-list">
+                </div>
+        </div>
+    </section>
+
+    <section id="view-orders" class="view hidden">
+        <header>
+            <div class="header-content">
+                <h1>Orders</h1>
+                <p>Manage all your works</p>
+            </div>
+            <div style="margin-top: 15px;">
+                <input type="text" id="search-input" placeholder="Search by customer or phone..." onkeyup="app.renderOrders()">
+            </div>
+            <div class="flex-between" style="margin-top: 10px; overflow-x: auto; gap: 8px; padding-bottom: 5px;">
+                <button class="btn btn-sm btn-primary" onclick="app.filterOrders('all')">All</button>
+                <button class="btn btn-sm btn-secondary" onclick="app.filterOrders('due')">Due</button>
+                <button class="btn btn-sm btn-secondary" onclick="app.filterOrders('urgent')">Urgent</button>
+                <button class="btn btn-sm btn-secondary" onclick="app.filterOrders('completed')">Done</button>
+            </div>
+        </header>
+        
+        <div class="container" id="orders-container">
+            </div>
+    </section>
+
+    <section id="view-customers" class="view hidden">
+        <header class="flex-between">
+            <div class="header-content">
+                <h1>Customers</h1>
+                <p>Client Database</p>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="app.toggleModal('modal-customer', true)">
+                <i class="fas fa-plus"></i> Add
+            </button>
+        </header>
+        <div class="container" id="customer-list">
+            </div>
+    </section>
+
+    <section id="view-add" class="view hidden">
+        <header class="flex-between">
+            <div class="header-content">
+                <h1>New Order</h1>
+                <p>Create a new work entry</p>
+            </div>
+            <button class="btn btn-sm btn-secondary" style="width: auto;" onclick="app.nav('dashboard')">
+                <i class="fas fa-times"></i>
+            </button>
+        </header>
+
+        <div class="container">
+            <div class="card">
+                <label>Select Customer <span class="text-danger">*</span></label>
+                <div style="display: flex; gap: 10px;">
+                    <select id="inp-customer" onchange="app.prefillMeasurements()">
+                        <option value="">-- Choose Customer --</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary" style="width: 50px;" onclick="app.toggleModal('modal-customer', true)">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="form-group">
+                    <label>Work Type</label>
+                    <select id="inp-type">
+                        <option value="Blouse">Blouse</option>
+                        <option value="Lehenga">Lehenga</option>
+                        <option value="Long Frock">Long Frock</option>
+                        <option value="Dress">Dress / Suit</option>
+                        <option value="Saree Pico">Saree Pico / Fall</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Delivery Date</label>
+                        <input type="date" id="inp-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="inp-priority">
+                            <option value="Normal">Normal</option>
+                            <option value="Urgent">Urgent</option>
+                            <option value="Super Urgent">Super Urgent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Design Notes</label>
+                    <textarea id="inp-note" rows="2" placeholder="Example: boat neck, deep back..."></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex-between" style="margin-bottom: 10px;">
+                    <label class="font-bold">Measurements (Optional)</label>
+                    <span class="text-xs text-primary" onclick="app.clearMeasurements()">Clear</span>
+                </div>
+                <div class="measure-grid">
+                    <div class="measure-box"><input type="number" id="m-len" placeholder="Length"><span>in</span></div>
+                    <div class="measure-box"><input type="number" id="m-chest" placeholder="Chest"><span>in</span></div>
+                    <div class="measure-box"><input type="number" id="m-waist" placeholder="Waist"><span>in</span></div>
+                    <div class="measure-box"><input type="number" id="m-shoul" placeholder="Shoulder"><span>in</span></div>
+                    <div class="measure-box"><input type="number" id="m-hand" placeholder="Hand"><span>in</span></div>
+                    <div class="measure-box"><input type="number" id="m-neck" placeholder="Neck"><span>in</span></div>
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <input type="text" id="m-other" placeholder="Other notes...">
+                </div>
+            </div>
+
+            <div class="card" style="border-color: var(--primary);">
+                <div class="form-group">
+                    <label>Total Price <span class="text-danger">*</span></label>
+                    <div style="position:relative;">
+                         <span style="position:absolute; left:12px; top:13px; color:#aaa;">₹</span>
+                        <input type="number" id="inp-total" placeholder="0" style="padding-left: 30px;" oninput="app.calcDue()">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Advance Paid</label>
+                         <div style="position:relative;">
+                             <span style="position:absolute; left:12px; top:13px; color:#aaa;">₹</span>
+                            <input type="number" id="inp-adv" placeholder="0" style="padding-left: 30px;" oninput="app.calcDue()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Remaining</label>
+                        <div id="display-due" style="font-size: 1.5rem; font-weight: 700; color: var(--text-gray); padding-top: 5px;">
+                            ₹0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 40px;">
+                <button class="btn btn-secondary" onclick="app.nav('dashboard')">Cancel</button>
+                <button class="btn btn-primary" onclick="app.saveOrder()">Save Order</button>
+            </div>
+        </div>
+    </section>
+
+    <div id="modal-customer" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="flex-between" style="margin-bottom: 20px;">
+                <h3>Add Customer</h3>
+                <i class="fas fa-times" onclick="app.toggleModal('modal-customer', false)"></i>
+            </div>
+            <div class="form-group">
+                <label>Full Name <span class="text-danger">*</span></label>
+                <input type="text" id="new-c-name" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Mobile Number <span class="text-danger">*</span></label>
+                <input type="tel" id="new-c-phone" placeholder="98765...">
+            </div>
+            <div class="form-group">
+                <label>Address (Optional)</label>
+                <input type="text" id="new-c-add" placeholder="City, Area">
+            </div>
+            <button class="btn btn-primary" onclick="app.addCustomer()">Save Customer</button>
+        </div>
+    </div>
+
+    <div id="modal-status" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 5px;">Update Status</h3>
+            <p class="text-sm text-gray" style="margin-bottom: 20px;">Select current progress</p>
+            <input type="hidden" id="status-order-id">
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn btn-secondary" onclick="app.updateStatus('Cutting')">✂️ Cutting</button>
+                <button class="btn btn-secondary" onclick="app.updateStatus('Stitching')">🧵 Stitching</button>
+                <button class="btn btn-secondary" onclick="app.updateStatus('Finishing')">✨ Finishing</button>
+                <button class="btn btn-secondary" onclick="app.updateStatus('Ready')">✅ Ready</button>
+                <button class="btn btn-primary" onclick="app.updateStatus('Delivered')">📦 Delivered</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fab" onclick="app.nav('add')">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <nav class="nav-bar">
+        <div class="nav-item active" onclick="app.nav('dashboard')" id="nav-dash">
+            <i class="fas fa-chart-pie"></i>
+            <span>Overview</span>
+        </div>
+        <div class="nav-item" onclick="app.nav('orders')" id="nav-orders">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Orders</span>
+        </div>
+        <div class="nav-item" onclick="app.nav('customers')" id="nav-customers">
+            <i class="fas fa-users"></i>
+            <span>Customers</span>
+        </div>
+    </nav>
+
+    <script>
+        const app = {
+            data: {
+                customers: [],
+                orders: []
+            },
+            
+            // --- INITIALIZATION ---
+            init: function() {
+                const c = localStorage.getItem('tmp_pro_customers');
+                const o = localStorage.getItem('tmp_pro_orders');
+                
+                if(c) this.data.customers = JSON.parse(c);
+                if(o) this.data.orders = JSON.parse(o);
+
+                // Setup Date
+                const options = { weekday: 'short', day: 'numeric', month: 'long' };
+                document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', options);
+
+                // Set default delivery date (+7 days)
+                const date = new Date();
+                date.setDate(date.getDate() + 7);
+                document.getElementById('inp-date').valueAsDate = date;
+
+                this.renderDashboard();
+            },
+
+            save: function() {
+                localStorage.setItem('tmp_pro_customers', JSON.stringify(this.data.customers));
+                localStorage.setItem('tmp_pro_orders', JSON.stringify(this.data.orders));
+                this.renderDashboard();
+            },
+
+            // --- NAVIGATION ---
+            nav: function(viewId) {
+                // UI Switch
+                document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                
+                // FAB Logic
+                const fab = document.querySelector('.fab');
+                if(viewId === 'add') fab.classList.add('hidden');
+                else fab.classList.remove('hidden');
+
+                // View Logic
+                if(viewId === 'dashboard') {
+                    document.getElementById('view-dashboard').classList.remove('hidden');
+                    document.getElementById('nav-dash').classList.add('active');
+                    this.renderDashboard();
+                } else if(viewId === 'orders') {
+                    document.getElementById('view-orders').classList.remove('hidden');
+                    document.getElementById('nav-orders').classList.add('active');
+                    this.renderOrders();
+                } else if(viewId === 'customers') {
+                    document.getElementById('view-customers').classList.remove('hidden');
+                    document.getElementById('nav-customers').classList.add('active');
+                    this.renderCustomers();
+                } else if(viewId === 'add') {
+                    document.getElementById('view-add').classList.remove('hidden');
+                    this.populateCustomerSelect();
+                    this.clearForm();
+                }
+            },
+
+            toggleModal: function(modalId, show) {
+                const el = document.getElementById(modalId);
+                if(show) {
+                    el.classList.remove('hidden');
+                    if(modalId === 'modal-customer') {
+                        document.getElementById('new-c-name').value = '';
+                        document.getElementById('new-c-phone').value = '';
+                        document.getElementById('new-c-add').value = '';
+                    }
+                } else {
+                    el.classList.add('hidden');
+                }
+            },
+
+            // --- CUSTOMER LOGIC ---
+            addCustomer: function() {
+                const name = document.getElementById('new-c-name').value;
+                const phone = document.getElementById('new-c-phone').value;
+                const addr = document.getElementById('new-c-add').value;
+
+                if(!name || !phone) return alert("Name and Mobile Number are required.");
+
+                this.data.customers.push({
+                    id: Date.now(),
+                    name, phone, address: addr,
+                    joinedAt: new Date().toISOString()
+                });
+                
+                this.save();
+                this.toggleModal('modal-customer', false);
+                this.populateCustomerSelect();
+                this.renderCustomers();
+            },
+
+            renderCustomers: function() {
+                const list = document.getElementById('customer-list');
+                list.innerHTML = '';
+                
+                if(this.data.customers.length === 0) {
+                    list.innerHTML = `<div class="empty-state"><i class="fas fa-user-friends"></i><p>No customers added yet</p></div>`;
+                    return;
+                }
+
+                this.data.customers.forEach(c => {
+                    list.innerHTML += `
+                        <div class="card flex-between">
+                            <div>
+                                <h3 class="font-bold">${c.name}</h3>
+                                <p class="text-sm text-gray">${c.phone}</p>
+                                ${c.address ? `<p class="text-xs text-light">${c.address}</p>` : ''}
+                            </div>
+                            <a href="tel:${c.phone}" class="btn btn-sm btn-secondary" style="width:40px; height:40px; border-radius:50%; padding:0; display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-phone text-primary"></i>
+                            </a>
+                        </div>
+                    `;
+                });
+            },
+
+            populateCustomerSelect: function() {
+                const sel = document.getElementById('inp-customer');
+                sel.innerHTML = '<option value="">-- Choose Customer --</option>';
+                this.data.customers.forEach(c => {
+                    sel.innerHTML += `<option value="${c.id}">${c.name} (${c.phone})</option>`;
+                });
+            },
+
+            // --- ORDER LOGIC ---
+            calcDue: function() {
+                const total = parseFloat(document.getElementById('inp-total').value) || 0;
+                const adv = parseFloat(document.getElementById('inp-adv').value) || 0;
+                let due = total - adv;
+                if(due < 0) due = 0; // Prevent negative
+
+                const display = document.getElementById('display-due');
+                display.innerText = '₹' + due;
+                
+                if(due > 0) { display.classList.add('text-danger'); display.classList.remove('text-success'); }
+                else { display.classList.remove('text-danger'); display.classList.add('text-success'); }
+            },
+
+            prefillMeasurements: function() {
+                const custId = document.getElementById('inp-customer').value;
+                if(!custId) return;
+                
+                // Smart Feature: Find last order measurement
+                const lastOrder = [...this.data.orders].reverse().find(o => o.customerId == custId);
+                if(lastOrder && lastOrder.measurements) {
+                    const m = lastOrder.measurements;
+                    if(confirm("Use measurements from previous order?")) {
+                        document.getElementById('m-len').value = m.len || '';
+                        document.getElementById('m-chest').value = m.chest || '';
+                        document.getElementById('m-waist').value = m.waist || '';
+                        document.getElementById('m-shoul').value = m.shoul || '';
+                        document.getElementById('m-hand').value = m.hand || '';
+                        document.getElementById('m-neck').value = m.neck || '';
+                        document.getElementById('m-other').value = m.other || '';
+                    }
+                }
+            },
+
+            saveOrder: function() {
+                const custId = document.getElementById('inp-customer').value;
+                const type = document.getElementById('inp-type').value;
+                const price = document.getElementById('inp-total').value;
+
+                if(!custId) return alert("Please select a customer.");
+                if(!price) return alert("Total price is required.");
+
+                const newOrder = {
+                    id: Date.now(),
+                    customerId: custId,
+                    type: type,
+                    designNote: document.getElementById('inp-note').value,
+                    deliveryDate: document.getElementById('inp-date').value,
+                    priority: document.getElementById('inp-priority').value,
+                    price: parseFloat(price),
+                    advance: parseFloat(document.getElementById('inp-adv').value) || 0,
+                    status: 'Received',
+                    createdAt: new Date().toISOString(),
+                    measurements: {
+                        len: document.getElementById('m-len').value,
+                        chest: document.getElementById('m-chest').value,
+                        waist: document.getElementById('m-waist').value,
+                        shoul: document.getElementById('m-shoul').value,
+                        hand: document.getElementById('m-hand').value,
+                        neck: document.getElementById('m-neck').value,
+                        other: document.getElementById('m-other').value
+                    }
+                };
+
+                this.data.orders.unshift(newOrder);
+                this.save();
+                alert("Order Saved Successfully!");
+                this.nav('orders');
+            },
+
+            renderOrders: function(filterType = 'all') {
+                const container = document.getElementById('orders-container');
+                const term = document.getElementById('search-input').value.toLowerCase();
+                container.innerHTML = '';
+
+                if(this.data.orders.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No orders found</p></div>`;
+                    return;
+                }
+
+                let visibleCount = 0;
+
+                this.data.orders.forEach(o => {
+                    const cust = this.data.customers.find(c => c.id == o.customerId);
+                    if(!cust) return;
+
+                    // Filtering Logic
+                    let show = true;
+                    const due = o.price - o.advance;
+
+                    // Search Filter
+                    const searchMatch = cust.name.toLowerCase().includes(term) || cust.phone.includes(term);
+                    if(!searchMatch) show = false;
+
+                    // Tab Filter
+                    if(filterType === 'due' && due <= 0) show = false;
+                    if(filterType === 'urgent' && o.priority === 'Normal') show = false;
+                    if(filterType === 'completed' && o.status !== 'Delivered') show = false;
+                    
+                    if(show) {
+                        visibleCount++;
+                        const urgentClass = o.priority === 'Urgent' ? 'urgent' : (o.priority === 'Super Urgent' ? 'super-urgent' : '');
+                        
+                        // Status Badge Color
+                        let statusColor = 'bg-info-light';
+                        if(o.status === 'Delivered') statusColor = 'bg-success-light';
+                        else if(o.status === 'Received') statusColor = 'bg-gray-light';
+
+                        const html = `
+                            <div class="card order-card ${urgentClass}">
+                                <div class="flex-between">
+                                    <div>
+                                        <h3 class="font-bold">${cust.name}</h3>
+                                        <p class="text-sm text-gray">${o.type} • ${o.priority}</p>
+                                    </div>
+                                    <span class="badge ${statusColor}">${o.status}</span>
+                                </div>
+                                
+                                <div style="background:#f8fafc; padding:10px; border-radius:8px; margin:10px 0;">
+                                    <div class="flex-between text-sm">
+                                        <span class="text-gray">Price</span>
+                                        <span class="font-bold">₹${o.price}</span>
+                                    </div>
+                                    <div class="flex-between text-sm" style="margin-top:4px;">
+                                        <span class="text-gray">Paid</span>
+                                        <span class="text-success">₹${o.advance}</span>
+                                    </div>
+                                    <div class="flex-between text-sm" style="margin-top:4px; border-top:1px dashed #e2e8f0; padding-top:4px;">
+                                        <span class="text-gray">Due</span>
+                                        <span class="${due > 0 ? 'text-danger font-bold' : 'text-success'}">
+                                            ${due > 0 ? '₹'+due : 'Paid'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="flex-between">
+                                    <span class="text-xs text-light"><i class="fas fa-calendar"></i> ${o.deliveryDate}</span>
+                                    ${o.status !== 'Delivered' ? 
+                                        `<button class="btn btn-sm btn-secondary" onclick="app.openStatusModal(${o.id})">Update Status</button>` : 
+                                        '<span class="text-success text-sm"><i class="fas fa-check-circle"></i> Completed</span>'}
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += html;
+                    }
+                });
+
+                if(visibleCount === 0) {
+                     container.innerHTML = `<div class="empty-state"><p>No orders match filter</p></div>`;
+                }
+            },
+
+            filterOrders: function(type) {
+                // Visual feedback for buttons
+                const btns = document.querySelectorAll('#view-orders .btn-sm');
+                btns.forEach(b => {
+                    b.classList.remove('btn-primary'); 
+                    b.classList.add('btn-secondary');
+                    if(b.textContent.toLowerCase().includes(type === 'completed' ? 'done' : type)) {
+                        b.classList.add('btn-primary');
+                        b.classList.remove('btn-secondary');
+                    }
+                    if(type === 'all' && b.textContent === 'All') { b.classList.add('btn-primary'); b.classList.remove('btn-secondary'); }
+                });
+                
+                this.renderOrders(type);
+            },
+
+            // --- DASHBOARD LOGIC ---
+            renderDashboard: function() {
+                const todayStr = new Date().toISOString().split('T')[0];
+                const currentMonth = new Date().getMonth();
+
+                let todayIncome = 0;
+                let totalDue = 0;
+                let monthCount = 0;
+                let pendingCount = 0;
+                
+                const urgentList = document.getElementById('urgent-list');
+                urgentList.innerHTML = '';
+                let hasUrgent = false;
+
+                this.data.orders.forEach(o => {
+                    // Due
+                    const due = o.price - o.advance;
+                    if(due > 0 && o.status !== 'Delivered') totalDue += due;
+
+                    // Today Income (Logic: Advance collected today)
+                    if(o.createdAt.startsWith(todayStr)) {
+                        todayIncome += parseFloat(o.advance || 0);
+                    }
+
+                    // Month Count
+                    if(new Date(o.createdAt).getMonth() === currentMonth) monthCount++;
+
+                    // Pending
+                    if(o.status !== 'Delivered') {
+                        pendingCount++;
+                        
+                        // Urgent Widget
+                        if(o.priority !== 'Normal') {
+                            hasUrgent = true;
+                            const cust = this.data.customers.find(c => c.id == o.customerId);
+                            const html = `
+                                <div class="card flex-between" style="padding:12px; border-left:4px solid var(--warning);">
+                                    <div>
+                                        <p class="font-bold text-sm">${o.type}</p>
+                                        <p class="text-xs text-gray">${cust ? cust.name : 'Unknown'}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="badge bg-warning-light">${o.priority}</span>
+                                        <p class="text-xs text-danger" style="margin-top:2px;">${o.deliveryDate}</p>
+                                    </div>
+                                </div>
+                            `;
+                            urgentList.innerHTML += html;
+                        }
+                    }
+                });
+
+                if(!hasUrgent) urgentList.innerHTML = `<div class="empty-state" style="padding:10px;"><p>No urgent orders today</p></div>`;
+
+                document.getElementById('dash-income').innerText = '₹' + todayIncome;
+                document.getElementById('dash-due').innerText = '₹' + totalDue;
+                document.getElementById('dash-orders').innerText = monthCount;
+                document.getElementById('dash-pending').innerText = pendingCount;
+            },
+
+            // --- HELPERS ---
+            openStatusModal: function(id) {
+                document.getElementById('status-order-id').value = id;
+                this.toggleModal('modal-status', true);
+            },
+
+            updateStatus: function(newStatus) {
+                const id = document.getElementById('status-order-id').value;
+                const order = this.data.orders.find(o => o.id == id);
+                if(order) {
+                    order.status = newStatus;
+                    this.save();
+                    this.toggleModal('modal-status', false);
+                    this.nav('orders'); // refresh list
+                }
+            },
+
+            clearForm: function() {
+                document.getElementById('inp-total').value = '';
+                document.getElementById('inp-adv').value = '';
+                document.getElementById('display-due').innerText = '₹0';
+                document.getElementById('inp-note').value = '';
+                this.clearMeasurements();
+            },
+
+            clearMeasurements: function() {
+                document.querySelectorAll('.measure-grid input').forEach(el => el.value = '');
+                document.getElementById('m-other').value = '';
+            }
+        };
+
+        // Boot
+        window.onload = function() { app.init(); };
+    </script>
+</body>
+</html>
